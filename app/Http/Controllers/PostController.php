@@ -19,9 +19,17 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Post::all();
+        $user = $request->user('sanctum');
+
+        return Post::where(function ($query) use ($user) {
+            $query->where('post_status_id', 1);
+
+            if ($user) {
+                $query->orWhere('user_id', $user->id);
+            }
+        })->get();
     }
 
     /**
@@ -31,7 +39,8 @@ class PostController extends Controller implements HasMiddleware
     {
         $fields = $request->validate([
             'title' => 'required|max:255',
-            'body' => 'required'
+            'body' => 'required',
+            'post_status_id' => 'sometimes|required|exists:post_statuses,id',
         ]);
 
         $post = $request->user()->posts()->create($fields);
@@ -44,6 +53,7 @@ class PostController extends Controller implements HasMiddleware
      */
     public function show(Post $post)
     {
+        Gate::forUser(request()->user('sanctum'))->authorize('view', $post);
         return $post;
     }
 

@@ -1,0 +1,162 @@
+body {
+    margin: 0;
+    font: 16px/1.5 Arial, sans-serif;
+}
+
+button, input, textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.page-shell {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.topbar, .account-area, .wordmark, .section-heading, .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.topbar, .intro, .footer, .post-item {
+    border-bottom: 1px solid #ccc;
+    padding: 16px 0;
+}
+
+.wordmark, .text-button, .mode-button {
+    color: inherit;
+}
+
+.brand-mark {
+    display: none;
+}
+
+.eyebrow, .note-stamp, .side-note {
+    display: none;
+}
+
+.intro h1 {
+    margin: 16px 0 0;
+    font-size: 2rem;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+    padding: 16px 0;
+}
+
+.section-heading h2, .auth-panel h2, .compose-panel h2 {
+    margin-top: 0;
+}
+
+.post-item {
+    display: flex;
+    gap: 12px;
+}
+
+.post-content h3 {
+    margin: 0;
+}
+
+.post-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.post-content p {
+    white-space: pre-wrap;
+}
+
+.post-title-row, .post-meta, .post-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.post-meta {
+    justify-content: space-between;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.post-actions {
+    margin-top: 12px;
+}
+
+.post-actions .text-button {
+    padding: 4px 0;
+    border: 0;
+    background: transparent;
+}
+
+.danger-button {
+    color: #9a352c;
+}
+
+.visibility-badge {
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: #e7efe7;
+    color: #31583a;
+    font-size: 0.75rem;
+}
+
+.auth-panel, .compose-panel {
+    padding: 16px;
+    border: 1px solid #ccc;
+}
+
+.form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-stack label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-stack input, .form-stack textarea, .form-stack select,
+.edit-form input, .edit-form textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.edit-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.primary-button {
+    padding: 8px;
+}
+
+.notice {
+    padding: 8px;
+    background: #fee;
+}
+
+@media (max-width: 650px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}

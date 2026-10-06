@@ -14,9 +14,38 @@ class PostTest extends TestCase
     public function test_anyone_can_list_and_show_posts(): void
     {
         $post = Post::factory()->create();
+        $privatePost = Post::factory()->create(['post_status_id' => 2]);
 
-        $this->getJson('/api/posts')->assertOk()->assertJsonCount(1);
+        $this->getJson('/api/posts')
+            ->assertOk()
+            ->assertJsonCount(1)
+            ->assertJsonMissing(['id' => $privatePost->id]);
         $this->getJson("/api/posts/{$post->id}")->assertOk()->assertJsonPath('title', $post->title);
+    }
+
+    public function test_authenticated_user_can_list_own_private_posts_only(): void
+    {
+        $owner = User::factory()->create();
+        $privatePost = Post::factory()->create(['user_id' => $owner->id, 'post_status_id' => 2]);
+        $otherPrivatePost = Post::factory()->create(['post_status_id' => 2]);
+
+        $this->withTokenFor($owner)
+            ->getJson('/api/posts')
+            ->assertOk()
+            ->assertJsonFragment(['id' => $privatePost->id])
+            ->assertJsonMissing(['id' => $otherPrivatePost->id]);
+    }
+
+    public function test_only_owner_can_show_private_post(): void
+    {
+        $post = Post::factory()->create(['post_status_id' => 2]);
+
+        $this->getJson("/api/posts/{$post->id}")->assertForbidden();
+
+        $this->withTokenFor($post->user)
+            ->getJson("/api/posts/{$post->id}")
+            ->assertOk()
+            ->assertJsonPath('id', $post->id);
     }
 
     public function test_guest_cannot_create_post(): void
@@ -34,6 +63,16 @@ class PostTest extends TestCase
             ->assertJsonPath('user_id', $user->id);
 
         $this->assertDatabaseHas('posts', ['title' => 'Hi', 'user_id' => $user->id]);
+    }
+
+    public function test_user_can_create_private_post(): void
+    {
+        $user = User::factory()->create();
+
+        $this->withTokenFor($user)
+            ->postJson('/api/posts', ['title' => 'Private', 'body' => 'Text', 'post_status_id' => 2])
+            ->assertCreated()
+            ->assertJsonPath('post_status_id', 2);
     }
 
     public function test_create_post_validates_input(): void
