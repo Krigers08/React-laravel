@@ -1,3 +1,15 @@
+import type { Dispatch, FormEvent, SetStateAction } from 'react';
+import type { AuthForm, AuthMode } from '../types';
+
+interface AuthPanelProps {
+    authMode: AuthMode;
+    authForm: AuthForm;
+    setAuthForm: Dispatch<SetStateAction<AuthForm>>;
+    busy: boolean;
+    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+    onToggleAuthMode: () => void;
+}
+
 export function AuthPanel({
     authMode,
     authForm,
@@ -5,7 +17,7 @@ export function AuthPanel({
     busy,
     onSubmit,
     onToggleAuthMode,
-}) {
+}: AuthPanelProps) {
     return (
         <section className="auth-panel">
             <p className="eyebrow">Join the conversation</p>

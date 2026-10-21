@@ -1,9 +1,14 @@
-export function ComposePanel({
-    postForm,
-    setPostForm,
-    busy,
-    onSubmit,
-}) {
+import type { Dispatch, FormEvent, SetStateAction } from 'react';
+import type { PostForm } from '../types';
+
+interface ComposePanelProps {
+    postForm: PostForm;
+    setPostForm: Dispatch<SetStateAction<PostForm>>;
+    busy: boolean;
+    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+export function ComposePanel({ postForm, setPostForm, busy, onSubmit }: ComposePanelProps) {
     return (
         <section className="compose-panel">
             <p className="eyebrow">Your notebook</p>
@@ -13,7 +18,7 @@ export function ComposePanel({
                     Title
                     <input
                         required
-                        maxLength="255"
+                        maxLength={255}
                         value={postForm.title}
                         onChange={(event) => setPostForm({ ...postForm, title: event.target.value })}
                         placeholder="A thought to keep"
@@ -23,7 +28,7 @@ export function ComposePanel({
                     Your note
                     <textarea
                         required
-                        rows="5"
+                        rows={5}
                         value={postForm.body}
                         onChange={(event) => setPostForm({ ...postForm, body: event.target.value })}
                         placeholder="Write something worth sharing..."

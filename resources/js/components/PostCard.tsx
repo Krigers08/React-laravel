@@ -1,4 +1,21 @@
+import type { Dispatch, FormEvent, SetStateAction } from 'react';
 import { formatPostDate, getToggleVisibilityLabel, getVisibilityLabel } from '../utils';
+import type { EditForm, Post, User } from '../types';
+
+interface PostCardProps {
+    post: Post;
+    index: number;
+    user: User | null;
+    busy: boolean;
+    editingPostId: number | null;
+    editForm: EditForm;
+    setEditForm: Dispatch<SetStateAction<EditForm>>;
+    onStartEdit: (post: Post) => void;
+    onSaveEdit: (event: FormEvent<HTMLFormElement>, postId: number) => void;
+    onCancelEdit: () => void;
+    onDeletePost: (post: Post) => void;
+    onToggleVisibility: (post: Post) => void;
+}
 
 export function PostCard({
     post,
@@ -13,7 +30,7 @@ export function PostCard({
     onCancelEdit,
     onDeletePost,
     onToggleVisibility,
-}) {
+}: PostCardProps) {
     const isOwner = user?.id === post.user_id;
     const visibilityLabel = getVisibilityLabel(post.post_status_id);
     const toggleLabel = getToggleVisibilityLabel(post.post_status_id);
@@ -28,7 +45,7 @@ export function PostCard({
                             Title
                             <input
                                 required
-                                maxLength="255"
+                                maxLength={255}
                                 value={editForm.title}
                                 onChange={(event) => setEditForm({ ...editForm, title: event.target.value })}
                             />
@@ -37,7 +54,7 @@ export function PostCard({
                             Your note
                             <textarea
                                 required
-                                rows="5"
+                                rows={5}
                                 value={editForm.body}
                                 onChange={(event) => setEditForm({ ...editForm, body: event.target.value })}
                             />

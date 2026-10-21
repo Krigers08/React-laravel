@@ -24,21 +24,22 @@ import {
     getAuthEndpoint,
     togglePostStatus,
 } from './utils';
+import type { AuthMode, EditForm, Post, PostForm, User } from './types';
 
 function App() {
-    const [posts, setPosts] = useState([]);
-    const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
-    const [authMode, setAuthMode] = useState('login');
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(null);
+    const [authMode, setAuthMode] = useState<AuthMode>('login');
     const [authForm, setAuthForm] = useState(createEmptyAuthForm());
     const [postForm, setPostForm] = useState(createEmptyPostForm());
-    const [editingPostId, setEditingPostId] = useState(null);
+    const [editingPostId, setEditingPostId] = useState<number | null>(null);
     const [editForm, setEditForm] = useState(createEmptyEditForm());
     const [error, setError] = useState('');
     const [loadingPosts, setLoadingPosts] = useState(true);
     const [busy, setBusy] = useState(false);
 
-    async function refreshPosts(authToken = token) {
+    async function refreshPosts(authToken: string | null = token) {
         setLoadingPosts(true);
         try {
             const data = await getPosts(authToken || '');
@@ -51,7 +52,7 @@ function App() {
     }
 
     useEffect(() => {
-        refreshPosts();
+        void refreshPosts();
     }, []);
 
     function handleToggleAuthMode() {
@@ -59,15 +60,15 @@ function App() {
         setError('');
     }
 
-    function showError(exception) {
-        const message = exception?.message === 'Authentication failed'
+    function showError(exception: unknown) {
+        const message = exception instanceof Error && exception.message === 'Authentication failed'
             ? 'Authentication failed'
             : getApiErrorMessage(exception);
 
         setError(message);
     }
 
-    async function handleAuth(event) {
+    async function handleAuth(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setBusy(true);
         setError('');
@@ -104,11 +105,11 @@ function App() {
             setUser(null);
             setToken(null);
             setEditingPostId(null);
-            await refreshPosts();
+            await refreshPosts(null);
         }
     }
 
-    async function handleCreatePost(event) {
+    async function handleCreatePost(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setBusy(true);
         setError('');
@@ -124,13 +125,13 @@ function App() {
         }
     }
 
-    function startEditing(post) {
+    function startEditing(post: Post) {
         setEditingPostId(post.id);
         setEditForm({ title: post.title, body: post.body });
         setError('');
     }
 
-    async function handleUpdatePost(event, postId) {
+    async function handleUpdatePost(event: React.FormEvent<HTMLFormElement>, postId: number) {
         event.preventDefault();
         setBusy(true);
         setError('');
@@ -146,7 +147,7 @@ function App() {
         }
     }
 
-    async function handleDeletePost(post) {
+    async function handleDeletePost(post: Post) {
         if (!window.confirm(`Delete "${post.title}"? This cannot be undone.`)) {
             return;
         }
@@ -164,7 +165,7 @@ function App() {
         }
     }
 
-    async function handleToggleVisibility(post) {
+    async function handleToggleVisibility(post: Post) {
         setBusy(true);
         setError('');
 
@@ -246,7 +247,12 @@ function App() {
     );
 }
 
-const root = import.meta.hot?.data.root ?? createRoot(document.getElementById('app'));
+const appElement = document.getElementById('app');
+if (!appElement) {
+    throw new Error('The app mount element was not found.');
+}
+
+const root = import.meta.hot?.data.root ?? createRoot(appElement);
 if (import.meta.hot) {
     import.meta.hot.data.root = root;
 }

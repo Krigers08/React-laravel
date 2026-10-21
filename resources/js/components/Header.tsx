@@ -1,4 +1,13 @@
-export function Header({ user, onLogout, authMode, onToggleAuthMode }) {
+import type { AuthMode, User } from '../types';
+
+interface HeaderProps {
+    user: User | null;
+    onLogout: () => void;
+    authMode: AuthMode;
+    onToggleAuthMode: () => void;
+}
+
+export function Header({ user, onLogout, authMode, onToggleAuthMode }: HeaderProps) {
     return (
         <header className="topbar">
             <a className="wordmark" href="/" aria-label="Fieldnotes home">

@@ -28,18 +28,20 @@ Every seeded user's password is `password`.
 
 ## Setup
 
-Requires PHP 8.3+ and Composer. SQLite is the default database.
+Requires PHP 8.3+, Composer, Node.js, and npm. SQLite is the default database.
 
 ```bash
 composer install
+npm ci
 cp .env.example .env
 php artisan key:generate
 touch database/database.sqlite
 php artisan migrate --seed
+npm run build
 php artisan serve
 ```
 
-The API is then at `http://localhost:8000/api`.
+The app is then at `http://localhost:8000` and the API is at `http://localhost:8000/api`. During frontend development, run `npm run dev` in a second terminal instead of `npm run build` and leave it running alongside `php artisan serve`.
 
 To wipe and reseed later:
 
@@ -49,9 +51,23 @@ php artisan migrate:fresh --seed
 
 ## Tests
 
+Install the JavaScript dependencies, then run the frontend checks:
+
+```bash
+npm ci
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+Run the Laravel feature and unit tests with:
+
 ```bash
 php artisan test
 ```
+
+GitHub Actions runs the frontend checks and Laravel tests on every push to `main`. Open the repository's **Actions** tab to view each run and its logs.
 
 ## Endpoints
 

@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Fieldnotes') }}</title>
     @viteReactRefresh
-    @vite('resources/js/app.jsx')
+    @vite('resources/js/app.tsx')
 </head>
 <body>
     <div id="app"></div>
